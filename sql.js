@@ -44,7 +44,7 @@ export async function getUserInfo(username){
 }
 
 export async function getPlots() {
-    queryDB("select plot.id, forest.name as forest, reserve.name as reserve from plot, forest, reserve where plot.forest_id = forest.id and plot.reserve_id = reserve.id;")
+    queryDB("select plot.id, forest.name as forest, reserve.name as reserve from test_carbonseq.plot, test_carbonseq.forest, test_carbonseq.reserve where plot.forest_id = forest.id and plot.reserve_id = reserve.id;")
     .then((dbResult)=>{
         console.log(dbResult);
         return dbResult;
