@@ -1,0 +1,45 @@
+import pg from "pg";
+import 'dotenv/config';
+
+const pgUSER = process.env.DB_USER;
+const pgPASS = process.env.DB_PASS;
+const pgURL = process.env.DB_HOST;
+const connectionStr = `postgres://${pgUSER}:${pgPASS}@${pgURL}?sslmode=verify-full`
+const client = new pg.Client(connectionStr);
+
+export async function queryDB(queryStr){
+    const pgUSER = process.env.DB_USER;
+    const pgPASS = process.env.DB_PASS;
+    const pgURL = process.env.DB_HOST;
+    const connectionStr = `postgres://${pgUSER}:${pgPASS}@${pgURL}?sslmode=verify-full`
+    const client = new pg.Client(connectionStr);
+        client.connect().catch((error) => {
+        console.error(error);
+        return null;
+    });
+
+    let rtnRes;
+    try {
+        const res = await client.query(queryStr);
+        const data = res.rows;
+        rtnRes = res;
+    } catch (err){
+        console.error(err);
+        throw(err);
+    } finally {
+        await client.end;
+    }
+
+    //console.log(rtnRes);
+    return rtnRes;
+}
+export async function getUserInfo(username){
+    let userInfo = null;
+    queryDB("SELECT u.username, u.firstname, u.lastname, u.email FROM test_carbonseq.user AS u where u.username='"+username+"';").then((dbResult)=>{
+        console.log(dbResult)}
+    ).catch(err => {
+        console.log(err.stack);
+    })
+    return userInfo;
+}
+
