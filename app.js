@@ -62,9 +62,10 @@ app.get("/app/trees", (req, res, next) => {
     res.json(trees);
 })
 
-app.get("/app/plots", async (req, res, next) => {
-    const send = async () => {res.json(getPlots())};
-    send();
+app.get("/app/plots", (req, res, next) => {
+    getPlots().then((dbResult)=>{
+        res.json(dbResult.rows);
+    })
 })
 
 app.get("/app/user", (req, res, next) => {
