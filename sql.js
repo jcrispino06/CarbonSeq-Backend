@@ -13,7 +13,7 @@ export async function queryDB(queryStr){
     const pgURL = process.env.DB_HOST;
     const connectionStr = `postgres://${pgUSER}:${pgPASS}@${pgURL}?sslmode=verify-full`
     const client = new pg.Client(connectionStr);
-        client.connect().catch((error) => {
+    await client.connect().catch((error) => {
         console.error(error);
         return null;
     });
@@ -23,11 +23,11 @@ export async function queryDB(queryStr){
         const res = await client.query(queryStr);
         const data = res.rows;
         rtnRes = res;
+        await client.end();
     } catch (err){
         console.error(err);
         throw(err);
-    } finally {
-        await client.end;
+        await client.end();
     }
 
     //console.log(rtnRes);
@@ -44,13 +44,13 @@ export async function getUserInfo(username){
 }
 
 export async function getPlots() {
-    const result = await queryDB("select plot.id, forest.name as forest, reserve.name as reserve from test_carbonseq.plot, test_carbonseq.forest, test_carbonseq.reserve where plot.forest_id = forest.id and plot.reserve_id = reserve.id;")
+    const result = queryDB("select plot.id, forest.name as forest, reserve.name as reserve from test_carbonseq.plot, test_carbonseq.forest, test_carbonseq.reserve where plot.forest_id = forest.id and plot.reserve_id = reserve.id;")
 	.then((dbResult)=>{
         //console.log(dbResult);
         return dbResult;
     }).catch(err => {
         console.log(err.stack);
-    })
+    }).finally(()=>{})
     return result;
 }
 
