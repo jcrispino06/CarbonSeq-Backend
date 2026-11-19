@@ -4,7 +4,7 @@ import https from 'https';
 import cors from 'cors'; // use to disable cors
 import 'dotenv/config';
 import fs from 'fs'; // use to get file listing and upload files
-import {queryDB} from './sql.js';
+import {getPlots, queryDB} from './sql.js';
 import {parseHTTPHeader} from './util.js';
 
 // DO NOT EDIT
@@ -30,9 +30,6 @@ async function getCert (){
         console.log("privkey is " + privkey);
         console.log("fullchain is " + fullchain);
         console.log("PORT is " + PORT);
-
-        //key = await fs.readFileSync('/etc/letsencrypt/live/ic-research2.eastus.cloudapp.azure.com/privkey.pem', 'utf8');
-        //cert = await fs.readFileSync('/etc/letsencrypt/live/ic-research2.eastus.cloudapp.azure.com/fullchain.pem', 'utf8');
 
         key = await fs.readFileSync(privkey, 'utf8');
         cert = await fs.readFileSync(fullchain, 'utf8');
@@ -61,8 +58,12 @@ let trees = {
       {tag: '78', nameCommon: 'Red Oak', status: 'measured'}
 ]};
 
-app.get("/app/getTrees", (req, res, next) => {
+app.get("/app/trees", (req, res, next) => {
     res.json(trees);
+})
+
+app.get("/app/plots", (req, res, next) => {
+    res.json(getPlots());
 })
 
 app.get("/app/user", (req, res, next) => {
