@@ -64,7 +64,10 @@ app.get("/app/trees", (req, res, next) => {
 
 app.get("/app/plots", (req, res, next) => {
     getPlots().then((dbResult)=>{
+	//console.log(dbResult);
         res.json(dbResult.rows);
+    }).catch(err =>{
+	console.log(err.stack);
     })
 })
 
