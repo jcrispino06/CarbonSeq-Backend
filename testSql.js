@@ -1,4 +1,4 @@
-import { getPlots, getTrees, queryDB } from "./sql.js";
+import { getMeasurements, getPlots, getTrees, queryDB } from "./sql.js";
 
 getTrees().then((dbResult)=>{
     console.log(dbResult);

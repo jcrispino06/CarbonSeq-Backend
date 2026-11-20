@@ -58,7 +58,7 @@ export async function getPlots() {
 
 // Returns trees in GeoJSON format
 export async function getTrees() {
-    const queryStr = "select t.id, t.plot_id, t.pos_x, t.pos_y from test_carbonseq.tree t where t.pos_x is not null order by t.plot_id;";
+    const queryStr = "select t.id, t.plot_id, t.pos_x, t.pos_y from test_carbonseq.tree t order by t.plot_id;";
     const result = await queryDB(queryStr)
         .then((dbResult)=>{return dbResult.rows})
         .catch(err => {console.log(err.stack)})
@@ -79,5 +79,14 @@ export async function getTrees() {
         geoJsonObjArr.push(currElem);
     });
     return JSON.parse('{"type": "FeatureCollection","features":' + JSON.stringify(geoJsonObjArr) + '}');
+}
+
+// Returns a list of measurements for a specific tree
+export async function getMeasurements(treeID) {
+    const queryStr = "select * from test_carbonseq.measurement m where m.treeid = "+treeID+";"
+    const result = await queryDB(queryStr)
+        .then((dbResult)=>{return dbResult.rows})
+        .catch(err => {console.log(err.stack)})
+    return result;
 }
 
