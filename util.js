@@ -13,3 +13,8 @@ export function parseHTTPHeader(header){
     });
     return headerMap;
 }
+
+// Object to GeoJSON
+// export function toGeoJSON(){
+
+// }

@@ -1,5 +1,6 @@
 import pg from "pg";
 import 'dotenv/config';
+// import toGeoJSON from "util.js"
 
 const pgUSER = process.env.DB_USER;
 const pgPASS = process.env.DB_PASS;
@@ -52,5 +53,31 @@ export async function getPlots() {
         console.log(err.stack);
     }).finally(()=>{})
     return result;
+}
+
+
+// Returns trees in GeoJSON format
+export async function getTrees() {
+    const queryStr = "select t.id, t.plot_id, t.pos_x, t.pos_y from test_carbonseq.tree t where t.pos_x is not null order by t.plot_id;";
+    const result = await queryDB(queryStr)
+        .then((dbResult)=>{return dbResult.rows})
+        .catch(err => {console.log(err.stack)})
+    const geoJsonObjArr = [];
+    let currElem;
+    result.map(element => {
+        currElem = {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: [element.pos_x, element.pos_y]
+            },
+            properties: {
+                id: element.id,
+                plot_id: element.plot_id
+            }
+        }
+        geoJsonObjArr.push(currElem);
+    });
+    return '{"type": "FeatureCollection","features":' + JSON.stringify(geoJsonObjArr) + '}';
 }
 

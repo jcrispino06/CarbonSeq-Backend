@@ -1,7 +1,7 @@
-import { getPlots, queryDB } from "./sql.js";
+import { getPlots, getTrees, queryDB } from "./sql.js";
 
-getPlots().then((dbResult)=>{
-    console.log(dbResult.rows);
+getTrees().then((dbResult)=>{
+    console.log(dbResult);
 }).catch(err => {
     console.log(err.stack);
 });
