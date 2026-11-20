@@ -4,7 +4,7 @@ import https from 'https';
 import cors from 'cors'; // use to disable cors
 import 'dotenv/config';
 import fs from 'fs'; // use to get file listing and upload files
-import {getPlots, getTrees, queryDB} from './sql.js';
+import {getPlotInfo, getPlots, getTrees, getAllTrees, queryDB} from './sql.js';
 import {parseHTTPHeader} from './util.js';
 
 // DO NOT EDIT
@@ -60,6 +60,15 @@ let trees = {
 
 app.get("/app/:plotid/trees", (req, res, next) => {
     getTrees(req.params.plotid).then((dbResult) => {
+        console.log(req.params.plotid);
+        res.json(dbResult)
+    }).catch(err => {
+        res.json(err)
+    })
+})
+
+app.get("/app/:plotid/info", (req, res, next)=>{
+    getPlotInfo(req.params.plotid).then((dbResult) => {
         console.log(req.params.plotid);
         res.json(dbResult)
     }).catch(err => {

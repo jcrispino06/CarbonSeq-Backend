@@ -27,7 +27,6 @@ export async function queryDB(queryStr){
         await client.end();
     } catch (err){
         console.error(err);
-        throw(err);
         await client.end();
     }
 
@@ -55,10 +54,21 @@ export async function getPlots() {
     return result;
 }
 
+export async function getPlotInfo(plot_id) {
+    const result = queryDB("select plot.id, forest.name as forest, reserve.name as reserve, plot.pos_x, plot.pos_y from test_carbonseq.plot, test_carbonseq.forest, test_carbonseq.reserve where plot.forest_id = forest.id and plot.reserve_id = reserve.id and plot.id = '"+plot_id.toUpperCase()+"';")
+	.then((dbResult)=>{
+        //console.log(dbResult);
+        return dbResult;
+    }).catch(err => {
+        console.log(err.stack);
+    }).finally(()=>{})
+    return result;
+}
+
 
 // Returns trees in GeoJSON format
 export async function getTrees(plot_id) {
-    const queryStr = "select t.id, t.plot_id, t.pos_x, t.pos_y from test_carbonseq.tree t where t.plot_id = '"+plot_id+"' order by t.plot_id;";
+    const queryStr = "select t.id, t.plot_id, t.pos_x, t.pos_y from test_carbonseq.tree t where t.plot_id = '"+plot_id.toUpperCase()+"' order by t.plot_id;";
     const result = await queryDB(queryStr)
         .then((dbResult)=>{return dbResult.rows})
         .catch(err => {console.log(err.stack)})
@@ -69,7 +79,31 @@ export async function getTrees(plot_id) {
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [element.pos_x, element.pos_y]
+                coordinates: [parseFloat(element.pos_x), parseFloat(element.pos_y)]
+            },
+            properties: {
+                id: element.id,
+                plot_id: element.plot_id
+            }
+        }
+        geoJsonObjArr.push(currElem);
+    });
+    return JSON.parse('{"type": "FeatureCollection","features":' + JSON.stringify(geoJsonObjArr) + '}');
+}
+
+export async function getAllTrees() {
+    const queryStr = "select t.id, t.plot_id, t.pos_x, t.pos_y from test_carbonseq.tree t order by t.plot_id;";
+    const result = await queryDB(queryStr)
+        .then((dbResult)=>{return dbResult.rows})
+        .catch(err => {console.log(err.stack)})
+    const geoJsonObjArr = [];
+    let currElem;
+    result.map(element => {
+        currElem = {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: [parseFloat(element.pos_x), parseFloat(element.pos_y)]
             },
             properties: {
                 id: element.id,
