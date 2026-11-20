@@ -59,7 +59,7 @@ let trees = {
 ]};
 
 app.get("/app/trees", (req, res, next) => {
-    getTrees.then((dbResult) => {
+    getTrees().then((dbResult) => {
         res.json(dbResult)
     }).catch(err => {
         res.json(err)

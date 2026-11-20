@@ -78,6 +78,6 @@ export async function getTrees() {
         }
         geoJsonObjArr.push(currElem);
     });
-    return '{"type": "FeatureCollection","features":' + JSON.stringify(geoJsonObjArr) + '}';
+    return JSON.parse('{"type": "FeatureCollection","features":' + JSON.stringify(geoJsonObjArr) + '}');
 }
 
