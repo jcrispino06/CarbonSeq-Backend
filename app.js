@@ -58,8 +58,9 @@ let trees = {
       {tag: '78', nameCommon: 'Red Oak', status: 'measured'}
 ]};
 
-app.get("/app/trees", (req, res, next) => {
-    getTrees().then((dbResult) => {
+app.get("/app/:plotid/trees", (req, res, next) => {
+    getTrees(req.params.plotid).then((dbResult) => {
+        console.log(req.params.plotid);
         res.json(dbResult)
     }).catch(err => {
         res.json(err)

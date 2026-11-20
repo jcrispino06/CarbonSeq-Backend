@@ -57,8 +57,8 @@ export async function getPlots() {
 
 
 // Returns trees in GeoJSON format
-export async function getTrees() {
-    const queryStr = "select t.id, t.plot_id, t.pos_x, t.pos_y from test_carbonseq.tree t order by t.plot_id;";
+export async function getTrees(plot_id) {
+    const queryStr = "select t.id, t.plot_id, t.pos_x, t.pos_y from test_carbonseq.tree t where t.plot_id = "+plot_id+" order by t.plot_id;";
     const result = await queryDB(queryStr)
         .then((dbResult)=>{return dbResult.rows})
         .catch(err => {console.log(err.stack)})
