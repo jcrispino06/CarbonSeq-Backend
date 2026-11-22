@@ -5,7 +5,7 @@ import https from 'https';
 import cors from 'cors'; // use to disable cors
 import 'dotenv/config';
 import fs from 'fs'; // use to get file listing and upload files
-import {getPlotInfo, getPlots, getTrees, getAllTrees, queryDB} from './sql.js';
+import {getPlotInfo, getPlots, getTrees, getAllTrees, queryDB, getTreeMeasurements} from './sql.js';
 import {parseHTTPHeader} from './util.js';
 
 const app = express();
@@ -54,7 +54,17 @@ app.get("/app/plots/:plotid/trees", (req, res, next) => {
     }
 })
 
-app.get("/app/plots/:plotid/info", (req, res, next)=>{
+app.get("/app/trees/:treeid", (req, res, next)=>{
+    const in_treeid = parseInt(req.params.treeid);
+    getTreeMeasurements(in_treeid).then((dbResult)=>{
+        console.log(in_treeid);
+        res.json(dbResult);
+    }).catch(err=> {
+        res.json(err);
+    })
+})
+
+app.get("/app/plots/:plotid", (req, res, next)=>{
     getPlotInfo(req.params.plotid).then((dbResult) => {
         console.log(req.params.plotid);
         res.json(dbResult)
@@ -63,10 +73,10 @@ app.get("/app/plots/:plotid/info", (req, res, next)=>{
     })
 })
 
-app.get("/app/plots/all/info", (req, res, next) => {
+app.get("/app/plots/", (req, res, next) => {
     getPlots().then((dbResult)=>{
     //console.log(dbResult);
-        res.json(dbResult.rows);
+        res.json(dbResult);
     }).catch(err =>{
         console.log(err.stack);
     })

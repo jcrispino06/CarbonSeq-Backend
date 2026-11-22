@@ -58,16 +58,36 @@ let trees = {
       {tag: '78', nameCommon: 'Red Oak', status: 'measured'}
 ]};
 
-app.get("/app/:plotid/trees", (req, res, next) => {
-    getTrees(req.params.plotid).then((dbResult) => {
-        console.log(req.params.plotid);
-        res.json(dbResult)
-    }).catch(err => {
-        res.json(err)
+app.get("/app/plots/:plotid/trees", (req, res, next) => {
+    const in_plotid = req.params.plotid.toUpperCase();
+    if (in_plotid != "ALL"){
+        getTrees(req.params.plotid).then((dbResult) => {
+            console.log(req.params.plotid);
+            res.json(dbResult)
+        }).catch(err => {
+            res.json(err)
+        })
+    } else {
+        getAllTrees().then((dbResult) => {
+            console.log(req.params.plotid);
+            res.json(dbResult)
+        }).catch(err => {
+            res.json(err)
+        })
+    }
+})
+
+app.get("/app/trees/:treeid", (req, res, next)=>{
+    const in_treeid = parseInt(req.params.treeid);
+    getTreeMeasurements(in_treeid).then((dbResult)=>{
+        console.log(in_treeid);
+        res.json(dbResult);
+    }).catch(err=> {
+        res.json(err);
     })
 })
 
-app.get("/app/:plotid/info", (req, res, next)=>{
+app.get("/app/plots/:plotid", (req, res, next)=>{
     getPlotInfo(req.params.plotid).then((dbResult) => {
         console.log(req.params.plotid);
         res.json(dbResult)
@@ -76,12 +96,12 @@ app.get("/app/:plotid/info", (req, res, next)=>{
     })
 })
 
-app.get("/app/plots", (req, res, next) => {
+app.get("/app/plots/", (req, res, next) => {
     getPlots().then((dbResult)=>{
-	//console.log(dbResult);
-        res.json(dbResult.rows);
+    //console.log(dbResult);
+        res.json(dbResult);
     }).catch(err =>{
-	    console.log(err.stack);
+        console.log(err.stack);
     })
 })
 
