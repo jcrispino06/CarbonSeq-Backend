@@ -95,6 +95,15 @@ app.get("/app/user", (req, res, next) => {
     })
 })
 
+app.get("/app/trees/", (req, res, next)=>{
+    getAllTrees().then((dbResult)=>{
+        console.log(dbResult);
+        res.json(dbResult);
+    }).catch(err=> {
+        res.json(err);
+    })
+})
+
 app.put("/app/user", (req, res, next)=> {
     const httpHeader = parseHTTPHeader(req.rawHeaders);
     const username = httpHeader.get("username");

@@ -89,7 +89,7 @@ app.get("/app/trees/:treeid", (req, res, next)=>{
 
 app.get("/app/trees/", (req, res, next)=>{
     getAllTrees().then((dbResult)=>{
-        console.log(in_treeid);
+        console.log(dbResult);
         res.json(dbResult);
     }).catch(err=> {
         res.json(err);
