@@ -4,7 +4,7 @@ import https from 'https';
 import cors from 'cors'; // use to disable cors
 import 'dotenv/config';
 import fs from 'fs'; // use to get file listing and upload files
-import {getPlotInfo, getPlots, getTrees, getAllTrees, queryDB} from './sql.js';
+import {getPlotInfo, getPlots, getTrees, getAllTrees, queryDB, getTreeMeasurements} from './sql.js';
 import {parseHTTPHeader} from './util.js';
 
 // DO NOT EDIT
