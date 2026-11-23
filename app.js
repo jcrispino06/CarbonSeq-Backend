@@ -87,6 +87,15 @@ app.get("/app/trees/:treeid", (req, res, next)=>{
     })
 })
 
+app.get("/app/trees/", (req, res, next)=>{
+    getAllTrees().then((dbResult)=>{
+        console.log(in_treeid);
+        res.json(dbResult);
+    }).catch(err=> {
+        res.json(err);
+    })
+})
+
 app.get("/app/plots/:plotid", (req, res, next)=>{
     getPlotInfo(req.params.plotid).then((dbResult) => {
         console.log(req.params.plotid);
