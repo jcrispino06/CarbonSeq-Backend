@@ -103,7 +103,7 @@ export async function getPlotInfo(plot_id) {
 
 // Returns trees in GeoJSON format
 export async function getTrees(plot_id) {
-    const queryStr = "select t.id, t.plot_id, t.pos_x, t.pos_y from test_carbonseq.tree t where t.plot_id = '"+plot_id.toUpperCase()+"' order by t.plot_id;";
+    const queryStr = "select * from test_carbonseq.info_tree where info_tree.plot_id = '"+plot_id.toUpperCase()+"' order by info_tree.plot_id;";
     const result = await queryDB(queryStr)
         .then((dbResult)=>{return dbResult.rows})
         .catch(err => {console.log(err.stack)})
@@ -118,7 +118,9 @@ export async function getTrees(plot_id) {
             },
             properties: {
                 id: element.id,
-                plot_id: element.plot_id
+                plot_id: element.plot_id,
+                common_name: element.common_name,
+                status: element.status
             }
         }
         geoJsonObjArr.push(currElem);
@@ -127,7 +129,7 @@ export async function getTrees(plot_id) {
 }
 
 export async function getAllTrees() {
-    const queryStr = "select t.id, t.plot_id, t.pos_x, t.pos_y from test_carbonseq.tree t order by t.plot_id;";
+    const queryStr = "select * from test_carbonseq.info_tree t order by t.plot_id;";
     const result = await queryDB(queryStr)
         .then((dbResult)=>{return dbResult.rows})
         .catch(err => {console.log(err.stack)})
@@ -142,7 +144,9 @@ export async function getAllTrees() {
             },
             properties: {
                 id: element.id,
-                plot_id: element.plot_id
+                plot_id: element.plot_id,
+                common_name: element.common_name,
+                status: element.status
             }
         }
         geoJsonObjArr.push(currElem);
